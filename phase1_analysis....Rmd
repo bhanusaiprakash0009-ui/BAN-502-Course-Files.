@@ -1,0 +1,99 @@
+---
+output:
+  word_document: default
+  html_document: default
+---
+---
+title: "Project Phase 1"
+author: "Bhanu"
+date: "`r Sys.Date()`"
+output: word_document
+
+## Setup and Libraries
+```{r}
+library(tidyverse)
+library(skimr)
+library(janitor)
+```
+
+```{r}
+library(readr)
+train <- read_csv("train.csv")
+View(train)
+```
+
+## Data Structure
+```{r}
+skim(train)
+```
+
+## Descriptive Statistics
+```{r}
+skim(train)
+```
+
+## Clean Column Names
+```{r}
+train <- clean_names(train)
+```
+
+## Failure Variable Distribution
+```{r}
+table(train$failure)
+prop.table(table(train$failure))
+```
+
+```{r}
+ggplot(train, aes(x = failure)) +
+  geom_bar(fill = "steelblue") +
+  labs(
+    title = "Distribution of Product Failures",
+    x = "Failure",
+    y = "Count"
+  )
+```
+
+## Missing Data Summary
+```{r}
+colSums(is.na(train))
+```
+
+## Convert Failure to Factor
+```{r}
+train$failure <- as.factor(train$failure)
+str(train$failure)
+```
+
+## Remove ID Variable
+```{r}
+train <- train %>% select(-id)
+```
+
+## Product Code as Factor
+```{r}
+train$product_code <- as.factor(train$product_code)
+str(train$product_code)
+```
+
+## Failure Rate by Product Code
+```{r}
+ggplot(train, aes(x = product_code, fill = failure)) +
+  geom_bar(position = "fill") +
+  labs(
+    title = "Failure Rate by Product Code",
+    x = "Product Code",
+    y = "Proportion"
+  )
+```
+
+## Numeric Variable Comparison
+```{r}
+ggplot(train, aes(x = failure, y = measurement_1)) +
+  geom_boxplot(fill = "lightblue") +
+  labs(
+    title = "Measurement 1 by Failure Status",
+    x = "Failure",
+    y = "Measurement 1"
+  )
+```
+
